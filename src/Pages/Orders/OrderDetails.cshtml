@@ -1,0 +1,84 @@
+@page
+@model OrderDetailsModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Order details</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Status</th>
+      <th scope="col">Customer name</th>
+      <th scope="col">Building</th>
+      <th scope="col">Room number</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">@Model.Order.Id</th>
+      <td>@Model.Order.Status</td>
+      <td>@Model.Order.Customer.Name</td>
+      <td>@Model.Order.Location.Building</td> 
+      <td>@Model.Order.Location.RoomNumber</td>
+       <td>@Model.Order.Location.Notes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Products</h2>
+<table class="table  table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model.Order.OrderLines)
+    {
+      <tr>
+        <td scope="row">@item.ItemName</td>
+        <td>@item.Amount</td>
+        <td>@item.Price</td>
+      </tr>
+    }
+    <tr>
+    </tr>
+  </tbody>
+</table>
+<br>
+
+@if (Model.Order.Status == Core.Domain.Ordering.Status.Shipped)
+{
+<h2>Reimbursement</h2>
+<div style="border:5px solid #000000; padding: 10px;">
+  <p><strong>Shipper: </strong>@Model.Offer.Reimbursement.Shipper.Name</p>
+  <p><strong>Total: </strong>@Model.Offer.Reimbursement.Amount</p>
+</div>
+
+<h2>Invoice</h2>
+<div style="border:5px solid #000000; padding: 10px;">
+  <p><strong>Customer: </strong>@Model.Invoice.Customer.Name</p>
+  <p><strong>Total: </strong>@Model.Invoice.Amount</p>
+  <p><strong>Location: </strong>@Model.Invoice.Address.Building , @Model.Invoice.Address.RoomNumber</p>
+  <p><strong>Status: </strong>@Model.Invoice.Status</p>
+</div>
+}
+
+@if (Model.Order.Status == Core.Domain.Ordering.Status.Placed)
+{
+  <form method="post">
+      <input type="text" asp-for="ShipperName" placeholder="Shipper name" />
+      <button type="submit" class="btn btn-primary">Ship</button>
+      @foreach (var error in Model.Errors)
+      {
+          <div class="alert alert-danger" role="alert">
+              @error
+          </div>
+      }
+  </form>
+}

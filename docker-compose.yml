@@ -1,0 +1,39 @@
+version: '3.7'
+networks:
+  dev:
+    driver: bridge
+
+services:
+  app:
+    image: fskickz/food:1.1
+    depends_on:
+      - "db"
+    container_name: app-services
+    ports:
+      - "5001:80"
+    build:
+      context: src/
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=User ID=postgres;Server=db;Port=5432;Database=sample_db;Password=example;
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - dev
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=sample_db
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - app_data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  app_data:
