@@ -38,5 +38,17 @@ spec:
               hostPort: 5001
               protocol: TCP
           resources: {}
+          livenessProbe:
+            httpGet:
+              path: /ishealthy
+              port: 5001
+            initialDelaySeconds: 45
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /isready
+              port: 5001
+            initialDelaySeconds: 45
+            timeoutSeconds: 2
       restartPolicy: Always
 status: {}
