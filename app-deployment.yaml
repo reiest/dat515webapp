@@ -40,15 +40,15 @@ spec:
           resources: {}
           livenessProbe:
             httpGet:
-              path: /ishealthy
-              port: 5001
+              path: /
+              port: 80
             initialDelaySeconds: 45
             timeoutSeconds: 2
           readinessProbe:
             httpGet:
-              path: /isready
-              port: 5001
-            initialDelaySeconds: 45
+              path: /
+              port: 80
+            initialDelaySeconds: 30
             timeoutSeconds: 2
       restartPolicy: Always
 status: {}
